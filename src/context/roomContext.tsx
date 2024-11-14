@@ -23,14 +23,19 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
 
   const enterRoom = ({ roomID }: { roomID: string }) => {
     navigate(`/room/${roomID}`)
+    console.log("enter room")
+  }
+
+  const getUsers = ({ participants }: { participants: string[] }) => {
+    console.log(participants)
   }
 
   useEffect(() => {
     const meID = uuidV4()
     const peer = new Peer(meID)
-    // console.log(peer)
     setMe(peer)
     ws.on("room-created", enterRoom)
+    ws.on("get-users", getUsers)
   }, [])
 
   return (
