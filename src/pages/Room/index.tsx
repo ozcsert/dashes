@@ -1,11 +1,14 @@
 import { useContext, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { RoomContext } from "../../context/roomContext"
+import { VideoPlayer } from "../../components/VideoPlayer"
+
+type PeerState = Record<string, { stream: MediaStream }>
 
 export const Room = () => {
   const { id } = useParams()
 
-  const { ws, me } = useContext(RoomContext)
+  const { ws, me, stream, peers } = useContext(RoomContext)
 
   // const disconnectRoom = () => {
   //   console.log(`${me._id} + is disconnect from room + ${id}`)
@@ -20,7 +23,13 @@ export const Room = () => {
   return (
     <>
       Room id = {id}
-      {/* <button onClick={disconnectRoom}>Disconnect</button> */}
+      <div>
+        <VideoPlayer stream={stream} />
+
+        {Object.values(peers as PeerState).map((peer, index) => (
+          <VideoPlayer key={index} stream={peer.stream} />
+        ))}
+      </div>
     </>
   )
 }

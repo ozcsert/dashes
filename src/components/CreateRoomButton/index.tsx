@@ -6,7 +6,6 @@ const CreateRoomButton: React.FC = () => {
 
   const createRoom = () => {
     console.log("create rom")
-
     ws.emit("create-room")
   }
   return <button onClick={createRoom}>Create Room</button>
