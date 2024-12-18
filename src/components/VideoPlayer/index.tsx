@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react"
+import "./styles.scss"
 
 export const VideoPlayer: React.FC<{ stream: MediaStream }> = ({ stream }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
