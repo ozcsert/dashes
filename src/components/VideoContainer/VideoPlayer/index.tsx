@@ -8,5 +8,9 @@ export const VideoPlayer: React.FC<{ stream: MediaStream }> = ({ stream }) => {
     if (videoRef.current) videoRef.current.srcObject = stream
   }, [stream])
 
-  return <video ref={videoRef} autoPlay muted={true} />
+  return (
+    <div className="video-wrapper">
+      <video ref={videoRef} autoPlay muted={true} />
+    </div>
+  )
 }

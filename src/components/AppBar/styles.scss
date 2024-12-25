@@ -1,0 +1,11 @@
+.appBar {
+  width: 95%;
+  max-width: 1600px;
+  padding-top: 20px;
+  &__logo-wrapper {
+    width: 100px;
+    img {
+      width: 100%;
+    }
+  }
+}

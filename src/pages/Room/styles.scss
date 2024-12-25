@@ -1,5 +1,18 @@
-.video-wrapper {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none;
-  background-color: red;
+.room {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  &__info-container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+  }
+  &__video-stack-container {
+    gap: 10px;
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+  }
 }
