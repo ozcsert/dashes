@@ -1,34 +1,43 @@
-import { useContext, useEffect } from "react"
+import { useState, useRef } from "react"
 import { useParams } from "react-router-dom"
-import { RoomContext } from "../../context/roomContext"
-import { VideoPlayer } from "../../components/VideoPlayer"
 
-type PeerState = Record<string, { stream: MediaStream }>
+import "./styles.scss"
+import avatar from "@/public/Avatar.svg"
+import { AppBar } from "@/components/AppBar"
+import { VideoContainer } from "@/components/VideoContainer"
+import { WhiteBoard } from "@/components/WhiteBoard"
+// SAYFA YENILENDIGINDE IKI ADET GELIYOR BIRI WIDGET OLARAK DIGERI DEFAULT VIDEO OLARAK
 
 export const Room = () => {
   const { id } = useParams()
-
-  const { ws, me, stream, peers } = useContext(RoomContext)
-
-  // const disconnectRoom = () => {
-  //   console.log(`${me._id} + is disconnect from room + ${id}`)
-  //   ws.emit("disconnect-room")
-  // }
-
-  useEffect(() => {
-    if (me) ws.emit("join-room", { roomID: id, peerId: me._id })
-    // ws.emit("disconnect-room")
-  }, [id, me, ws])
+  // const [userName, setUserName] =
+  const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
+  const canvas = useRef(null)
+  const ctx = useRef(null)
 
   return (
     <>
-      Room id = {id}
-      <div>
-        <VideoPlayer stream={stream} />
+      <div className="room">
+        <AppBar />
+        <div>Room id = {id}</div>
 
-        {Object.values(peers as PeerState).map((peer, index) => (
-          <VideoPlayer key={index} stream={peer.stream} />
-        ))}
+        <div className="room__info-container">
+          {userIcon &&
+            userIcon.map((icon) => {
+              return (
+                <div>
+                  <img src={avatar} alt="Avatar" />
+                </div>
+              )
+            })}
+        </div>
+        <div className="room__video-stack-container">
+          <VideoContainer id={id} />
+        </div>
+        <div className="room__canvas-container">
+          <WhiteBoard canvasRef={canvas} ctxRef={ctx} />
+          <canvas></canvas>
+        </div>
       </div>
     </>
   )
