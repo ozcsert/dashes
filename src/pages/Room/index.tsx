@@ -14,7 +14,9 @@ export const Room = () => {
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
   const canvas = useRef(null)
   const ctx = useRef(null)
-
+  const [tool, setTool] = useState("pencil")
+  const [elements, setElements] = useState([])
+  const [color, setColor] = useState("black")
   return (
     <>
       <div className="room">
@@ -23,9 +25,9 @@ export const Room = () => {
 
         <div className="room__info-container">
           {userIcon &&
-            userIcon.map((icon) => {
+            userIcon.map((icon, index) => {
               return (
-                <div>
+                <div key={index}>
                   <img src={avatar} alt="Avatar" />
                 </div>
               )
@@ -35,8 +37,7 @@ export const Room = () => {
           <VideoContainer id={id} />
         </div>
         <div className="room__canvas-container">
-          <WhiteBoard canvasRef={canvas} ctxRef={ctx} />
-          <canvas></canvas>
+          <WhiteBoard canvasRef={canvas} ctxRef={ctx} elements={setElements} />
         </div>
       </div>
     </>

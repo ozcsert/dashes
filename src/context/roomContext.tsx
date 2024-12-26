@@ -28,10 +28,8 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
 }) => {
   const navigate = useNavigate()
   const [me, setMe] = useState<Peer>()
-  const [userName, setUserName] = useState(
-    localStorage.getItem("userName") || ""
-  )
   const [stream, setStream] = useState<MediaStream>()
+  const [userName, setUserName] = useState<string>("")
   // const [peers, dispatch] = useReducer(peersReducer, {})
   const { peers, addPeer, removePeer } = usePeerStore()
 
@@ -47,11 +45,6 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
     removePeer(peerId)
     // dispatch(removePeerAction(peerId))
   }
-
-  useEffect(() => {
-    localStorage.setItem("userName", userName)
-  }, [userName])
-
   useEffect(() => {
     const meID = uuidV4()
     const peer = new Peer(meID)
@@ -99,7 +92,7 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
 
   return (
     <RoomContext.Provider
-      value={{ ws, me, stream, peers, setUserName, userName }}
+      value={{ ws, me, stream, peers, userName, setUserName }}
     >
       {children}
     </RoomContext.Provider>
