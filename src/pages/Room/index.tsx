@@ -6,6 +6,7 @@ import avatar from "@/public/Avatar.svg"
 import { AppBar } from "@/components/AppBar"
 import { VideoContainer } from "@/components/VideoContainer"
 import { WhiteBoard } from "@/components/WhiteBoard"
+import { ToolBar } from "@/components/ToolBar"
 // SAYFA YENILENDIGINDE IKI ADET GELIYOR BIRI WIDGET OLARAK DIGERI DEFAULT VIDEO OLARAK
 
 export const Room = () => {
@@ -14,9 +15,10 @@ export const Room = () => {
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
   const canvas = useRef(null)
   const ctx = useRef(null)
-  const [tool, setTool] = useState("pencil")
+  // const [tool, setTool] = useState("pencil")
   const [elements, setElements] = useState([])
   const [color, setColor] = useState("black")
+
   return (
     <>
       <div className="room">
@@ -36,8 +38,11 @@ export const Room = () => {
         <div className="room__video-stack-container">
           <VideoContainer id={id} />
         </div>
+        <div>
+          <ToolBar />
+        </div>
         <div className="room__canvas-container">
-          <WhiteBoard canvasRef={canvas} ctxRef={ctx} elements={setElements} />
+          <WhiteBoard canvasRef={canvas} ctxRef={ctx} />
         </div>
       </div>
     </>
