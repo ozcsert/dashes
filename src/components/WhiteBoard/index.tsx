@@ -1,47 +1,57 @@
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState, useRef } from "react"
 import { useCanvasStore } from "@/Store/canvasStore"
 import rough from "roughjs"
 import "./styles.scss"
-type WhiteBoardProps = {
-  ctxRef: React.RefObject<HTMLCanvasElement>
-  canvasRef: React.RefObject<HTMLCanvasElement>
-  // elements: any
-  // setElements: any
+
+type PathItem = { offsetX: number; offsetY: number } | [number, number][]
+
+type DrawingObject = {
+  type: string
+  stroke: string
+  path: PathItem[]
+  offsetX: number
+  offsetY: number
+  height: number
+  width: number
 }
 
 const roughGenerator = rough.generator()
 
-export const WhiteBoard: React.FC<WhiteBoardProps> = ({
-  ctxRef,
-  canvasRef,
-}) => {
+export const WhiteBoard: React.FC = () => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false)
-  const [elements, setElements] = useState<any>([])
+  const [elements, setElements] = useState<DrawingObject[]>([])
   const tool = useCanvasStore((state) => state.tool)
+  console.log(elements)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null) // Mutable ref
+
   useEffect(() => {
     const canvas = canvasRef.current
+    canvas!.height = window.innerHeight * 2
+    canvas!.width = window.innerWidth * 2
 
-    canvas.height = window.innerHeight * 2
-    canvas.width = window.innerWidth * 2
-
-    const ctx = canvas.getContext("2d")
+    const ctx = canvas!.getContext("2d")
     ctxRef.current = ctx
   }, [])
 
   useLayoutEffect(() => {
-    const roughCanvas = rough.canvas(canvasRef.current)
+    const roughCanvas = rough.canvas(canvasRef.current!)
     if (elements.length > 0) {
-      ctxRef.current.clearRect(
+      ctxRef.current!.clearRect(
         0,
         0,
-        canvasRef.current.width,
-        canvasRef.current.height
+        canvasRef.current!.width,
+        canvasRef.current!.height
       )
     }
 
     elements.forEach((element) => {
       if (element.type === "pencil") {
-        roughCanvas.linearPath(element.path)
+        const points = element.path.map((item) =>
+          Array.isArray(item) ? item : [item.offsetX, item.offsetY]
+        ) as [number, number][]
+
+        roughCanvas.linearPath(points)
       } else if (element.type === "line") {
         roughCanvas.draw(
           roughGenerator.line(
@@ -77,7 +87,7 @@ export const WhiteBoard: React.FC<WhiteBoardProps> = ({
           offsetY,
           path: [{ offsetX, offsetY }],
           stroke: "black",
-        },
+        } as DrawingObject,
       ])
     } else if (tool === "line") {
       setElements((prevElements) => [
@@ -89,7 +99,7 @@ export const WhiteBoard: React.FC<WhiteBoardProps> = ({
           width: offsetX,
           height: offsetY,
           stroke: "black",
-        },
+        } as DrawingObject,
       ])
     } else if (tool === "rectangle") {
       setElements((prevElements) => [
@@ -101,7 +111,7 @@ export const WhiteBoard: React.FC<WhiteBoardProps> = ({
           width: 0,
           height: 0,
           stroke: "black",
-        },
+        } as DrawingObject,
       ])
     }
 
@@ -129,7 +139,7 @@ export const WhiteBoard: React.FC<WhiteBoardProps> = ({
               return {
                 ...ele,
                 path: newPath,
-              }
+              } as DrawingObject
             } else {
               return ele
             }

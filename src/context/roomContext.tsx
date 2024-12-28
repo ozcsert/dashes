@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useEffect,
-  useState,
-  // useReducer,
-} from "react"
+import { createContext, ReactNode, useEffect, useState } from "react"
 import socketIOClient from "socket.io-client"
 import { useNavigate } from "react-router-dom"
 import Peer from "peerjs"
@@ -32,7 +26,9 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
   const [userName, setUserName] = useState<string>("")
   // const [peers, dispatch] = useReducer(peersReducer, {})
   const { peers, addPeer, removePeer } = usePeerStore()
+  console.log("me is", userName)
 
+  console.log("me is", me)
   const enterRoom = ({ roomID }: { roomID: string }) => {
     navigate(`/room/${roomID}`)
     console.log("enter room")
@@ -45,11 +41,20 @@ export const RoomProvider: React.FunctionComponent<RoomProviderProps> = ({
     removePeer(peerId)
     // dispatch(removePeerAction(peerId))
   }
-  useEffect(() => {
+
+  const peerData = () => {
     const meID = uuidV4()
     const peer = new Peer(meID)
+    peer._username = userName
     setMe(peer)
+  }
 
+  useEffect(() => {
+    peerData()
+  }, [userName])
+
+  useEffect(() => {
+    peerData()
     try {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })

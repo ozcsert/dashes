@@ -11,13 +11,7 @@ import { ToolBar } from "@/components/ToolBar"
 
 export const Room = () => {
   const { id } = useParams()
-  // const [userName, setUserName] =
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
-  const canvas = useRef(null)
-  const ctx = useRef(null)
-  // const [tool, setTool] = useState("pencil")
-  const [elements, setElements] = useState([])
-  const [color, setColor] = useState("black")
 
   return (
     <>
@@ -42,7 +36,7 @@ export const Room = () => {
           <ToolBar />
         </div>
         <div className="room__canvas-container">
-          <WhiteBoard canvasRef={canvas} ctxRef={ctx} />
+          <WhiteBoard />
         </div>
       </div>
     </>
