@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
-import { RoomContext } from "../../context/roomContext"
+import { RoomContext } from "../../context/RoomProvider"
 import { VideoPlayer } from "../../components/VideoContainer/VideoPlayer"
 import "gridstack/dist/gridstack.min.css"
 import { GridStack } from "gridstack"

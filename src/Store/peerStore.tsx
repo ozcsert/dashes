@@ -8,15 +8,14 @@ export type PeerState = {
 
 export const usePeerStore = create<PeerState>((set) => ({
   peers: {},
-
-  addPeer: (peerId, stream) =>
+  addPeer: (peerId, stream) => {
     set((state) => ({
       peers: {
         ...state.peers,
         [peerId]: { stream },
       },
-    })),
-
+    }))
+  },
   removePeer: (peerId) =>
     set((state) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

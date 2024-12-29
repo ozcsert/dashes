@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState, useLayoutEffect } from "react"
 
 import { useParams } from "react-router-dom"
-import { RoomContext } from "../../context/roomContext"
+import { RoomContext } from "../../context/RoomProvider"
 import { VideoPlayer } from "../../components/VideoContainer/VideoPlayer"
 
 import { GridStack, GridStackWidget, GridStackOptions } from "gridstack"
