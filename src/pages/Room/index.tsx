@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { VideoPlayer } from "../../components/VideoContainer/VideoPlayer"
 import { useContext, useEffect } from "react"
-// import { RoomContext } from "../../context/RoomProvider"
+import { RoomContext } from "../../context/roomContext"
 import "./styles.scss"
 import avatar from "@/public/Avatar.svg"
 import { AppBar } from "@/components/AppBar"
@@ -18,22 +18,23 @@ type Props = {
 export const Room = () => {
   const { id } = useParams()
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
+  const { ws, me, stream, peers, userName } = useContext(RoomContext)
 
-  // const { _id, _username } = me
-  // const userData = {
-  //   _id,
-  //   _username,
-  // }
+  useEffect(() => {
+    if (me) {
+      // if (!stream) return
 
-  // useEffect(() => {
-  //   // console.log(me)
-  //   if (me)
-  //     // console.log(user)
-  //     // ws.emit("join-room", { roomID: id, peers: me._username, peerId: me._id })
-  //     ws.emit("join-room", { roomID: id, userData: userData })
-  //   console.log("join room emitlendi")
-  //   // setUserIcon(Object.keys(peers))
-  // }, [id, me, ws])
+      const { _id, _username } = me
+
+      const userData = {
+        _id,
+        _username,
+      }
+
+      ws.emit("join-room", { roomID: id, userData: userData })
+      console.log("join room emitted")
+    }
+  }, [id, me, ws])
 
   return (
     <>
@@ -52,11 +53,11 @@ export const Room = () => {
             })}
         </div>
         <div className="room__video-stack-container">
-          {/* <VideoPlayer stream={stream} />
+          {/* <VideoContainer id={id} /> */}
+          <VideoPlayer stream={stream} />
           {Object.values(peers as PeerState).map((peer, index) => (
             <VideoPlayer key={index} stream={peer.stream} />
-          ))} */}
-          <VideoContainer id={id} />
+          ))}
         </div>
         <div>
           <ToolBar />

@@ -32,6 +32,7 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
 
   const peerData = () => {
     const meID = uuidV4()
+    console.log(meID)
     const peer = new Peer(meID)
     peer._username = userName
     setMe(peer)
@@ -63,28 +64,32 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
     if (!stream) return
 
     ws.on("user-joined", (peerId) => {
-      console.log("User joined context")
+      setTimeout(() => {
+        console.log("User joined context")
+        // If this call needs the delay as well
 
-      try {
-        const call = me.call(peerId, stream)
-        console.log("Call object created:", call)
+        try {
+          const call = me.call(peerId, stream)
+          console.log("Call object created:", call)
 
-        if (call) {
-          call.on("stream", (peerStream) => {
-            try {
-              console.log("user call atildi context")
-              console.log("Received peer stream:", peerStream)
-              addPeer(peerId, peerStream)
-            } catch (error) {
-              console.error("Error handling stream:", error)
-            }
-          })
-        } else {
-          console.error("Call object is undefined or failed to initialize.")
+          if (call) {
+            call.on("stream", (peerStream) => {
+              try {
+                console.log("user call atildi context")
+                console.log("Received peer stream:", peerStream)
+
+                addPeer(peerId, peerStream)
+              } catch (error) {
+                console.error("Error handling stream:", error)
+              }
+            })
+          } else {
+            console.error("Call object is undefined or failed to initialize.")
+          }
+        } catch (error) {
+          console.error("Error creating call:", error)
         }
-      } catch (error) {
-        console.error("Error creating call:", error)
-      }
+      }, 2000)
     })
 
     me.on("call", (call) => {
@@ -94,6 +99,8 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
 
         call.on("stream", (peerStream) => {
           try {
+            console.log("Call answered successfully, emitting ready")
+            ws.emit("ready")
             console.log("Received peer stream:", peerStream)
             addPeer(call.peer, peerStream)
           } catch (error) {
