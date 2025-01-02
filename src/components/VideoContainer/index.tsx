@@ -21,9 +21,8 @@ export const VideoContainer = ({ id }: Props) => {
         _id,
         _username,
       }
-
+      console.warn("SENDING JOIN ROOM", userData)
       ws.emit("join-room", { roomID: id, userData: userData })
-      console.log("join room emitted")
     }
   }, [id, me, ws])
 

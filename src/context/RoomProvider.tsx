@@ -26,8 +26,9 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(participants)
   }
 
-  const removePeerHandler = (peerId: string) => {
-    removePeer(peerId)
+  const removePeerHandler = (peerId: Record<string, string>) => {
+    console.warn("remoed from state", peerId._id)
+    removePeer(peerId._id)
   }
 
   const peerData = () => {
@@ -64,32 +65,32 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
     if (!stream) return
 
     ws.on("user-joined", (peerId) => {
-      setTimeout(() => {
-        console.log("User joined context")
-        // If this call needs the delay as well
+      // setTimeout(() => {
+      console.log("User joined context")
+      // If this call needs the delay as well
 
-        try {
-          const call = me.call(peerId, stream)
-          console.log("Call object created:", call)
+      try {
+        const call = me.call(peerId, stream)
+        console.log("Call object created:", call)
 
-          if (call) {
-            call.on("stream", (peerStream) => {
-              try {
-                console.log("user call atildi context")
-                console.log("Received peer stream:", peerStream)
+        if (call) {
+          call.on("stream", (peerStream) => {
+            try {
+              console.log("user call atildi context")
+              console.log("Received peer stream:", peerStream)
 
-                addPeer(peerId, peerStream)
-              } catch (error) {
-                console.error("Error handling stream:", error)
-              }
-            })
-          } else {
-            console.error("Call object is undefined or failed to initialize.")
-          }
-        } catch (error) {
-          console.error("Error creating call:", error)
+              addPeer(peerId, peerStream)
+            } catch (error) {
+              console.error("Error handling stream:", error)
+            }
+          })
+        } else {
+          console.error("Call object is undefined or failed to initialize.")
         }
-      }, 2000)
+      } catch (error) {
+        console.error("Error creating call:", error)
+      }
+      // }, 1300)
     })
 
     me.on("call", (call) => {

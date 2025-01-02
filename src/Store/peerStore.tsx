@@ -20,6 +20,7 @@ export const usePeerStore = create<PeerState>((set) => ({
     set((state) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [peerId]: _, ...rest } = state.peers
+      console.warn(state.peers)
       return { peers: rest }
     }),
 }))

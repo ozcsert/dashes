@@ -18,23 +18,23 @@ type Props = {
 export const Room = () => {
   const { id } = useParams()
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
-  const { ws, me, stream, peers, userName } = useContext(RoomContext)
+  // const { ws, me, stream, peers, userName } = useContext(RoomContext)
 
-  useEffect(() => {
-    if (me) {
-      // if (!stream) return
+  // useEffect(() => {
+  //   if (me) {
+  //     // if (!stream) return
 
-      const { _id, _username } = me
+  //     const { _id, _username } = me
 
-      const userData = {
-        _id,
-        _username,
-      }
+  //     const userData = {
+  //       _id,
+  //       _username,
+  //     }
 
-      ws.emit("join-room", { roomID: id, userData: userData })
-      console.log("join room emitted")
-    }
-  }, [id, me, ws])
+  //     ws.emit("join-room", { roomID: id, userData: userData })
+  //     console.log("join room emitted")
+  //   }
+  // }, [id, me, ws])
 
   return (
     <>
@@ -53,11 +53,12 @@ export const Room = () => {
             })}
         </div>
         <div className="room__video-stack-container">
-          {/* <VideoContainer id={id} /> */}
-          <VideoPlayer stream={stream} />
+          <VideoContainer id={id} />
+          {/* <VideoPlayer stream={stream} />
+
           {Object.values(peers as PeerState).map((peer, index) => (
             <VideoPlayer key={index} stream={peer.stream} />
-          ))}
+          ))} */}
         </div>
         <div>
           <ToolBar />
