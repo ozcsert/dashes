@@ -9,6 +9,10 @@ import { usePeerStore } from "../Store/peerStore"
 
 const WS = "http://localhost:8080"
 
+interface PopulatedPeer extends Peer {
+  _username?: string
+}
+
 const ws = socketIOClient(WS)
 
 export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
@@ -32,11 +36,14 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const peerData = () => {
-    const meID = uuidV4()
-    console.log(meID)
-    const peer = new Peer(meID)
-    peer._username = userName
-    setMe(peer)
+    if (!me) {
+      const meID = uuidV4()
+      console.log(meID)
+      const peer: PopulatedPeer = new Peer(meID)
+      peer._username = userName
+      setMe(peer)
+      console.warn("meee", me)
+    }
   }
 
   useEffect(() => {
@@ -65,32 +72,32 @@ export const RoomProvider = ({ children }: { children: React.ReactNode }) => {
     if (!stream) return
 
     ws.on("user-joined", (peerId) => {
-      // setTimeout(() => {
-      console.log("User joined context")
-      // If this call needs the delay as well
+      setTimeout(() => {
+        console.log("User joined context")
+        // If this call needs the delay as well
 
-      try {
-        const call = me.call(peerId, stream)
-        console.log("Call object created:", call)
+        try {
+          const call = me.call(peerId, stream)
+          console.log("Call object created:", call)
 
-        if (call) {
-          call.on("stream", (peerStream) => {
-            try {
-              console.log("user call atildi context")
-              console.log("Received peer stream:", peerStream)
+          if (call) {
+            call.on("stream", (peerStream) => {
+              try {
+                console.log("user call atildi context")
+                console.log("Received peer stream:", peerStream)
 
-              addPeer(peerId, peerStream)
-            } catch (error) {
-              console.error("Error handling stream:", error)
-            }
-          })
-        } else {
-          console.error("Call object is undefined or failed to initialize.")
+                addPeer(peerId, peerStream)
+              } catch (error) {
+                console.error("Error handling stream:", error)
+              }
+            })
+          } else {
+            console.error("Call object is undefined or failed to initialize.")
+          }
+        } catch (error) {
+          console.error("Error creating call:", error)
         }
-      } catch (error) {
-        console.error("Error creating call:", error)
-      }
-      // }, 1300)
+      }, 1300)
     })
 
     me.on("call", (call) => {
