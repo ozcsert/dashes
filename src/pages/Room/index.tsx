@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
 
 import "./styles.scss"
@@ -6,14 +6,11 @@ import avatar from "@/public/Avatar.svg"
 import { AppBar } from "@/components/AppBar"
 import { VideoContainer } from "@/components/VideoContainer"
 import { WhiteBoard } from "@/components/WhiteBoard"
-// SAYFA YENILENDIGINDE IKI ADET GELIYOR BIRI WIDGET OLARAK DIGERI DEFAULT VIDEO OLARAK
+import { ToolBar } from "@/components/ToolBar"
 
 export const Room = () => {
   const { id } = useParams()
-  // const [userName, setUserName] =
   const [userIcon, setUserIcon] = useState<string[]>(["1", "2"])
-  const canvas = useRef(null)
-  const ctx = useRef(null)
 
   return (
     <>
@@ -23,9 +20,9 @@ export const Room = () => {
 
         <div className="room__info-container">
           {userIcon &&
-            userIcon.map((icon) => {
+            userIcon.map((icon, index) => {
               return (
-                <div>
+                <div key={index}>
                   <img src={avatar} alt="Avatar" />
                 </div>
               )
@@ -34,9 +31,11 @@ export const Room = () => {
         <div className="room__video-stack-container">
           <VideoContainer id={id} />
         </div>
+        <div>
+          <ToolBar />
+        </div>
         <div className="room__canvas-container">
-          <WhiteBoard canvasRef={canvas} ctxRef={ctx} />
-          <canvas></canvas>
+          <WhiteBoard />
         </div>
       </div>
     </>

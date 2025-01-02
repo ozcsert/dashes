@@ -1,6 +1,5 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { RoomContext } from "../../context/roomContext"
-
 import { VideoPlayer } from "./VideoPlayer"
 
 type PeerState = Record<string, { stream: MediaStream }>
@@ -8,20 +7,30 @@ type PeerState = Record<string, { stream: MediaStream }>
 type Props = {
   id: string | undefined
 }
+
 export const VideoContainer = ({ id }: Props) => {
-  const { ws, me, stream, peers } = useContext(RoomContext)
+  const { ws, me, stream, peers, userName } = useContext(RoomContext)
 
   useEffect(() => {
-    if (me) ws.emit("join-room", { roomID: id, peerId: me._id })
-    // setUserIcon(Object.keys(peers))
+    if (me) {
+      // if (!stream) return
+
+      const { _id, _username } = me
+
+      const userData = {
+        _id,
+        _username,
+      }
+      console.warn("SENDING JOIN ROOM", userData)
+      ws.emit("join-room", { roomID: id, userData: userData })
+    }
   }, [id, me, ws])
 
   return (
     <>
       <VideoPlayer stream={stream} />
-
-      {Object.values(peers as PeerState).map((peer) => (
-        <VideoPlayer stream={peer.stream} />
+      {Object.values(peers as PeerState).map((peer, index) => (
+        <VideoPlayer key={index} stream={peer.stream} />
       ))}
     </>
   )

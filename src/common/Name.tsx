@@ -1,10 +1,4 @@
-import { RoomContext } from "@/context/roomContext"
-import { useContext } from "react"
-
-export const NameInput: React.FC = ({}) => {
-  const { userName, setUserName } = useContext(RoomContext)
-
-  console.log(userName)
+export const NameInput: React.FC = ({ userName, setUserName }) => {
   return (
     <input
       placeholder="Pick a name"
