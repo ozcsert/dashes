@@ -1,0 +1,41 @@
+.toolbar-container {
+  position: fixed;
+  right: 0;
+  margin-right: 10px;
+  bottom: 25%;
+  display: flex;
+  flex-direction: column;
+  background-color: #daac96ca;
+  width: 70px;
+  max-width: 136px;
+  padding: 30px 0px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  box-shadow: -4px 0 4px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  &__icon-wrapper {
+    background-color: #ea638d;
+    display: flex;
+    border-radius: 30%;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    &:hover {
+      transform: scale(1.1);
+    }
+    img {
+      background-color: #ea638d;
+      //   width: 70%;
+      width: 30px;
+      height: 30px;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+// EA638D
