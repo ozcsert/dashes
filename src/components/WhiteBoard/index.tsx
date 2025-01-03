@@ -1,6 +1,8 @@
-import { useEffect, useLayoutEffect, useState, useRef } from "react"
+import { RoomContext } from "../../context/roomContext"
+import { useContext, useEffect, useLayoutEffect, useState, useRef } from "react"
 import { useCanvasStore } from "@/Store/canvasStore"
 import rough from "roughjs"
+import { encode, decode } from "@msgpack/msgpack"
 import "./styles.scss"
 
 type PathItem = { offsetX: number; offsetY: number } | [number, number][]
@@ -18,10 +20,13 @@ type DrawingObject = {
 const roughGenerator = rough.generator()
 
 export const WhiteBoard: React.FC = () => {
+  const { ws, me, stream, peers, userName } = useContext(RoomContext)
+
   const [isDrawing, setIsDrawing] = useState<boolean>(false)
   const [elements, setElements] = useState<DrawingObject[]>([])
+  const [elements2, setElements2] = useState<DrawingObject[]>([])
+
   const tool = useCanvasStore((state) => state.tool)
-  console.log(elements)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null) // Mutable ref
 
@@ -71,6 +76,19 @@ export const WhiteBoard: React.FC = () => {
           )
         )
       }
+    })
+
+    const encodedElements: Uint8Array = encode(elements)
+    // const decodedElementReturn: any = (decode(encodedElements), elements)
+    // console.log(decodedElementReturn)
+
+    ws.emit("canvas-data", encodedElements)
+    // const encodedElements: Uint8Array = encode(elements)
+
+    ws.on("canvas-data-return", (data: Uint8Array) => {
+      const decodedElementReturn: any = (decode(data), elements)
+      console.log(decodedElementReturn)
+      setElements((prev) => [...prev, ...decodedElementReturn])
     })
   }, [elements])
 
@@ -176,6 +194,8 @@ export const WhiteBoard: React.FC = () => {
       }
     }
   }
+
+  useEffect(() => {})
 
   return (
     <>

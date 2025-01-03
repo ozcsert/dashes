@@ -13,15 +13,11 @@ export const VideoContainer = ({ id }: Props) => {
 
   useEffect(() => {
     if (me) {
-      // if (!stream) return
-
       const { _id, _username } = me
-
       const userData = {
         _id,
         _username,
       }
-      console.warn("SENDING JOIN ROOM", userData)
       ws.emit("join-room", { roomID: id, userData: userData })
     }
   }, [id, me, ws])
